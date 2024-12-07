@@ -263,23 +263,23 @@ def ezville_loop(config):
 
     # MQTT 통신 연결 Callback
     def on_connect(client, userdata, flags, reason_code, properties):
-        if reason_code == 0:
-            log('[INFO] MQTT Broker 연결 성공')
-            # Subscribe based on communication mode
-            if comm_mode == 'socket':
-                client.subscribe([(HA_TOPIC + '/#', 0), ('homeassistant/status', 0)])
-            elif comm_mode == 'mixed':
-                client.subscribe([(HA_TOPIC + '/#', 0), (EW11_TOPIC + '/recv', 0), ('homeassistant/status', 0)])
-            else:
-                client.subscribe([(HA_TOPIC + '/#', 0), (EW11_TOPIC + '/recv', 0), (EW11_TOPIC + '/send', 1), ('homeassistant/status', 0)])
+    if reason_code == 0:
+        log('[INFO] MQTT Broker 연결 성공')
+        # Subscribe based on communication mode
+        if comm_mode == 'socket':
+            client.subscribe([(HA_TOPIC + '/#', 0), ('homeassistant/status', 0)])
+        elif comm_mode == 'mixed':
+            client.subscribe([(HA_TOPIC + '/#', 0), (EW11_TOPIC + '/recv', 0), ('homeassistant/status', 0)])
         else:
-        reason_codes = {mqtt.ReasonCodes(1): 'Connection refused - incorrect protocol version',
-                        mqtt.ReasonCodes(2): 'Connection refused - invalid client identifier',
-                        mqtt.ReasonCodes(3): 'Connection refused - server unavailable',
-                        mqtt.ReasonCodes(4): 'Connection refused - bad username or password',
-                        mqtt.ReasonCodes(5): 'Connection refused - not authorised'
-            }
-        log(reason_codes.get(reason_code, 'Connection failed with unknown reason code'))
+            client.subscribe([(HA_TOPIC + '/#', 0), (EW11_TOPIC + '/recv', 0), (EW11_TOPIC + '/send', 1), ('homeassistant/status', 0)])
+    else:
+    reason_codes = {mqtt.ReasonCodes(1): 'Connection refused - incorrect protocol version',
+                    mqtt.ReasonCodes(2): 'Connection refused - invalid client identifier',
+                    mqtt.ReasonCodes(3): 'Connection refused - server unavailable',
+                    mqtt.ReasonCodes(4): 'Connection refused - bad username or password',
+                    mqtt.ReasonCodes(5): 'Connection refused - not authorised'
+        }
+    log(reason_codes.get(reason_code, 'Connection failed with unknown reason code'))
          
         
     # MQTT 메시지 Callback
